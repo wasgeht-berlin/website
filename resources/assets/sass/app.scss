@@ -1,2 +1,36 @@
-// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import url(https://fonts.googleapis.com/css?family=Special+Elite);
 
+.page-title {
+  font-family: 'Special Elite', cursive;
+}
+
+.centered-pills {
+  text-align: center
+}
+
+.centered-pills ul.nav-pills {
+  display: inline-block
+}
+
+.centered-pills li {
+  display: inline
+}
+
+.centered-pills a {
+  float: left
+}
+
+* html .centered-pills ul.nav-pills, * + html .centered-pills ul.nav-pills {
+  display: inline
+}
+
+address {
+  color: #ccc;
+  transition: color 550ms;
+
+  &:hover, &:active {
+    color: #000;
+    transition: color 350ms;
+  }
+}
