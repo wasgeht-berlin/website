@@ -55,6 +55,12 @@ $calendar-border: 1px solid $calendar-border-color;
   }
 }
 
+.calendar-day-today {
+  .calendar-day-title {
+    border-bottom: 2px dashed black;
+  }
+}
+
 .calendar-day-body {
   height: 8em;
   overflow: scroll;

@@ -52,6 +52,13 @@ Vue.component('Event', {
 Vue.component('Calendar', {
     template: '#calendar-template',
 
+    data: function () {
+        return {
+            'month': 11,
+            'year': 2015
+        }
+    },
+
     props: {
         'events': {
             required: true
@@ -60,11 +67,7 @@ Vue.component('Calendar', {
 
     computed: {
         'date': function () {
-            return moment();
-        },
-
-        'month': function () {
-            return this.date.month();
+            return moment().year(this.year).month(this.month);
         },
 
         'daysInMonth': function () {
@@ -122,6 +125,10 @@ Vue.component('Calendar', {
             }
 
             return events;
+        },
+
+        'changeMonth': function (offset) {
+            this.month += offset;
         }
     }
 });
@@ -144,7 +151,15 @@ Vue.component('CalendarDay', {
     },
 
     computed: {
-        'dayClass': function () {
+        'todayClass': function () {
+            if (this.isToday()) {
+                return 'calendar-day-today';
+            } else {
+                return '';
+            }
+        },
+
+        'weekdayClass': function () {
             return 'calendar-day-' + this.day.format('dd').toLowerCase()
         },
 
@@ -160,6 +175,12 @@ Vue.component('CalendarDay', {
             }
 
             return 'calendar-day-' + month + '-month';
+        }
+    },
+
+    methods: {
+        'isToday': function () {
+            return this.day.isSame(moment(), 'day');
         }
     }
 });
