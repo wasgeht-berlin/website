@@ -53,9 +53,11 @@ Vue.component('Calendar', {
     template: '#calendar-template',
 
     data: function () {
+        var today = moment();
+
         return {
-            'month': 11,
-            'year': 2015
+            'month': today.month(),
+            'year': today.year()
         }
     },
 
