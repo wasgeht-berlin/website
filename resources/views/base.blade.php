@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>was geht</title>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}"/>
 </head>
 <body>

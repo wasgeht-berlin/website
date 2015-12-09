@@ -1,6 +1,8 @@
 var moment = require('moment');
 moment.locale('de', require('moment/locale/de'));
 
+var L = require('leaflet');
+
 var Vue = require('vue');
 Vue.use(require('vue-resource'));
 Vue.config.debug = true;
@@ -13,31 +15,6 @@ Vue.filter('nl2br', function (str) {
 Vue.filter('dateformat', function (datestr, format) {
     return moment(datestr).format(format);
 });
-
-//Vue.component('EventMap', {
-//    template: '<div id="event-{{id}}-map" style="width: 300px; height: 150px;"></div>',
-//
-//    props: {
-//        id: {
-//            required: true
-//        },
-//        lat: {
-//            required: true
-//        },
-//        lon: {
-//            required: true
-//        }
-//    },
-//
-//    ready: function () {
-//        var map = new mapboxgl.Map({
-//            container: 'event-' + this.id + '-map',
-//            style: 'mapbox://styles/mapbox/dark-v8',
-//            center: [this.lon, this.lat],
-//            zoom: 7
-//        })
-//    }
-//});
 
 Vue.component('Event', {
     template: '#event-template',
@@ -185,6 +162,44 @@ Vue.component('CalendarDay', {
         'isToday': function () {
             return this.day.isSame(moment(), 'day');
         }
+    }
+});
+
+Vue.component('Map', {
+    template: '#map-template',
+
+    data: function () {
+        return {
+            'mapHeight': 300
+        };
+    },
+
+    computed: {
+        'mapStyle': function() {
+            return 'height: ' + this.mapHeight + 'px;' +
+                   'position: relative; top: 0';
+        }
+    },
+
+    props: {
+        lat: {
+            required: true
+        },
+        lon: {
+            required: true
+        }
+    },
+
+    ready: function () {
+        var map = L.map('map').setView([this.lon, this.lat], 11);
+
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+        }).addTo(map);
+
+        this.mapHeight = window.innerHeight - this.$el.getBoundingClientRect().top - 100;
+
+        // FIXME: map has intermittent gray areas and is not perfectly centered
     }
 });
 
