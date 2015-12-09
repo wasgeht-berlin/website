@@ -44,7 +44,12 @@
             </div>
             <div class="calendar-day-body">
                 <ul>
-                    <li v-for="event in events">@{{ event.title }}</li>
+                    <template v-for="event in events">
+                        <li >
+                            <span class="calendar-event-time">@{{ event.starting_time | dateformat 'hh:ss' }}</span>
+                            <span class="calendar-event-title">@{{ event.title }}</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
         </div>

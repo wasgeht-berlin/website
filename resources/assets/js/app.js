@@ -121,7 +121,8 @@ Vue.component('Calendar', {
             var events = [];
 
             for (event in this.events) {
-                if (this.events.hasOwnProperty(event) && moment(this.events[event].starting_time).isSame(day, 'day')) {
+                if (this.events.hasOwnProperty(event)
+                    && moment(this.events[event].starting_time).isSame(day, 'day')) {
                     events.push(this.events[event]);
                 }
             }

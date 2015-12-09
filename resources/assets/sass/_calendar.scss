@@ -57,23 +57,29 @@ $calendar-border: 1px solid $calendar-border-color;
 
 .calendar-day-today {
   .calendar-day-title {
-    border-bottom: 2px dashed black;
+    background: black !important;
+    color: white;
   }
 }
 
 .calendar-day-body {
   height: 8em;
   overflow: scroll;
+  padding: .3em;
 
   ul {
-    list-style: circle;
+    list-style: none;
     font-size: smaller;
 
-    li { margin-left: -1.2em; }
+    li { margin-left: -2.8em; }
   }
 }
 
 .calendar-day-previous-month,
 .calendar-day-next-month {
   opacity: .5;
+}
+
+.calendar-event-time {
+  font-weight: 600;
 }
