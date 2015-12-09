@@ -2,10 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\RunScraper;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class DataScrapers extends Command
 {
+    use DispatchesJobs;
+
     /**
      * The name and signature of the console command.
      *
@@ -38,5 +42,6 @@ class DataScrapers extends Command
     public function handle()
     {
         //
+        $this->dispatch(new RunScraper('karreraklub'));
     }
 }

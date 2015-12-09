@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Event;
 use App\Http\Requests;
+use App\Model\Event;
+use GrahamCampbell\GitHub\GitHubManager;
 use Illuminate\Http\Request;
 
 class AppController extends Controller
@@ -58,6 +59,26 @@ class AppController extends Controller
         return view('map');
     }
 
+    public function calendar()
+    {
+        return view('calendar');
+    }
+
+    public function contribute(GitHubManager $gh)
+    {
+        $contributing_md = \Cache::remember('app.contribute.md', 10, function () use ($gh) {
+            return $gh->repo()
+                ->contents()
+                ->download('wasgeht-berlin', 'data-providers', 'CONTRIBUTING.md');
+        });
+
+        $markdown = \Parsedown::instance()->parse($contributing_md);
+
+        // FIXME: remove first heading level
+
+        return view('contribute', compact('markdown'));
+    }
+
     public function about()
     {
         return view('about');
@@ -65,6 +86,7 @@ class AppController extends Controller
 
     public function gh($repository)
     {
-
+        // TODO: github webhook for autoupdating the data-providers
+        // NOTE: should extract this thing as a library from the oparl spec website
     }
 }

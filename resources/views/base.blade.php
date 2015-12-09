@@ -17,7 +17,9 @@
             <nav class="centered-pills">
                 <ul class="nav nav-pills">
                     <li><a href="/">Liste</a></li>
+                    <li><a href="/calendar">Kalender</a></li>
                     <li><a href="/map">Karte</a></li>
+                    <li><a href="/contribute">Mitmachen</a></li>
                     <li><a href="/about">Über</a></li>
                 </ul>
             </nav>

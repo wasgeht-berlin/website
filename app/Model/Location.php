@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = ['lat', 'lon', 'human_name', 'human_street_address'];
+    protected $fillable = ['lat', 'lon', 'human_name', 'human_street_address', 'url'];
 
     public function events() {
         return $this->hasMany(Event::class);

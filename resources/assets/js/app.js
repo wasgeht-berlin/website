@@ -11,7 +11,7 @@ Vue.filter('nl2br', function (str) {
 });
 
 Vue.filter('dateformat', function (datestr, format) {
-   return moment(datestr).format(format);
+    return moment(datestr).format(format);
 });
 
 //Vue.component('EventMap', {
@@ -49,6 +49,121 @@ Vue.component('Event', {
     }
 });
 
+Vue.component('Calendar', {
+    template: '#calendar-template',
+
+    props: {
+        'events': {
+            required: true
+        }
+    },
+
+    computed: {
+        'date': function () {
+            return moment();
+        },
+
+        'month': function () {
+            return this.date.month();
+        },
+
+        'daysInMonth': function () {
+            var currentMonth = this.date.month();
+
+            var daysInMonth = 31;
+            if (currentMonth % 2 == 1) {
+                if (currentMonth == 1) {
+                    if (this.date.isLeapYear() % 4 == 0) {
+                        daysInMonth = 29;
+                    } else {
+                        daysInMonth = 28;
+                    }
+                } else {
+                    daysInMonth = 30;
+                }
+            }
+
+            return daysInMonth;
+        },
+
+        'currentDayInMonth': function () {
+            return this.date.date();
+        },
+
+        'weeksInMonth': function () {
+            return Math.floor(this.daysInMonth / 7) + 1;
+        },
+
+        'firstDayOfMonth': function () {
+            return moment().month(this.date.month()).date(1).day();
+        }
+    },
+
+    methods: {
+        'moment': function (date) {
+            return moment(date);
+        },
+
+        'day': function (week, dayInWeek) {
+            var offset = (week * 7)
+                       + (dayInWeek - this.firstDayOfMonth)
+                       - this.currentDayInMonth;
+
+            return moment(this.date).add({days: offset});
+        },
+
+        'eventsInDay': function (day) {
+            var events = [];
+
+            for (event in this.events) {
+                if (this.events.hasOwnProperty(event) && moment(this.events[event].starting_time).isSame(day, 'day')) {
+                    events.push(this.events[event]);
+                }
+            }
+
+            return events;
+        }
+    }
+});
+
+Vue.component('CalendarDay', {
+    template: '#calendar-day-template',
+
+    props: {
+        'day': {
+            required: true
+        },
+
+        'events': {
+            required: true
+        },
+
+        'currentMonth': {
+            required: true
+        }
+    },
+
+    computed: {
+        'dayClass': function () {
+            return 'calendar-day-' + this.day.format('dd').toLowerCase()
+        },
+
+        'monthClass': function () {
+            var month = 'current';
+
+            if (this.day.month() < this.currentMonth) {
+                month = 'previous';
+            }
+
+            if (this.day.month() > this.currentMonth) {
+                month = 'next';
+            }
+
+            return 'calendar-day-' + month + '-month';
+        }
+    }
+});
+
 new Vue({
     'el': 'body',
 
@@ -59,8 +174,8 @@ new Vue({
         pageCount: 0
     },
 
-    ready: function() {
-        this.$http.get('/data?action=events.'+this.perPage, function (res) {
+    ready: function () {
+        this.$http.get('/data?action=events.' + this.perPage, function (res) {
             this.$set('events', res.data);
             this.$set('currentPage', res.current_page);
             this.$set('pageCount', res.last_page);
@@ -73,7 +188,7 @@ new Vue({
                 this.currentPage += 1;
             }
 
-            this.$http.get('/data?action=events.'+this.perPage +'&page='+this.currentPage, function (res) {
+            this.$http.get('/data?action=events.' + this.perPage + '&page=' + this.currentPage, function (res) {
                 this.$set('events', res.data);
                 this.$set('currentPage', res.current_page);
                 this.$set('pageCount', res.last_page);
