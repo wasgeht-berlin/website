@@ -146,6 +146,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
+
+        EFrane\Deploy\DeployServiceProvider::class,
     ],
 
     /*
