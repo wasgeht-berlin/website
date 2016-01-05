@@ -10,7 +10,8 @@
         "erusev/parsedown": "^1.6",
         "graham-campbell/github": "^4.2",
         "efrane/laravel-deploy": "^1.0",
-        "predis/predis": "^1.0"
+        "predis/predis": "^1.0",
+        "elasticsearch/elasticsearch": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -73,7 +73,10 @@ Vue.component('Calendar', {
         },
 
         'weeksInMonth': function () {
-            return Math.floor(this.daysInMonth / 7) + 1;
+            var weeksEstimate = Math.ceil(this.daysInMonth / 7) + 1;
+            // TODO: check if the first day of the last week
+            // => (first + (estimate * 7) - 7) is still in the same month
+            return weeksEstimate;
         },
 
         'firstDayOfMonth': function () {
@@ -198,8 +201,6 @@ Vue.component('Map', {
         }).addTo(map);
 
         this.mapHeight = window.innerHeight - this.$el.getBoundingClientRect().top - 100;
-
-        // FIXME: map has intermittent gray areas and is not perfectly centered
     }
 });
 
