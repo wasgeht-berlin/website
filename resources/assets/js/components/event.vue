@@ -19,9 +19,11 @@
                     <br />
                     <time>{{ event.ending_time | dateformat 'LLL'}}</time>
                 </template>
-                <br />
-                <br />
-                <address v-html="event.location.human_street_address | nl2br"></address>
+                <template v-if="event.location.human_street_address">
+                    <br />
+                    <br />
+                    <address v-html="event.location.human_street_address | nl2br"></address>
+                </template>
             </div>
         </div>
 

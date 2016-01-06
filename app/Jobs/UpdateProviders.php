@@ -51,6 +51,7 @@ class UpdateProviders extends Job implements SelfHandling
 
     protected function downloadDirectory(array $file, array &$fileList)
     {
+        // NOTE: this could be further optimized by keeping track of directory hashes too
         $files = $this->gh->repo()->contents()->show($this->ghUser, $this->ghRepository, $file['path']);
 
         $dirName = $this->providerStorage;

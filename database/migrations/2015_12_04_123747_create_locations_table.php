@@ -17,7 +17,7 @@ class CreateLocationsTable extends Migration
             $table->timestamps();
 
             $table->string('human_name');
-            $table->string('human_street_address');
+            $table->string('human_street_address')->nullable();
 
             $table->double('lat')->nullable();
             $table->double('lon')->nullable();

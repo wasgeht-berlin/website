@@ -8,7 +8,7 @@ class Event extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'title',
         'description',
         'starting_time',
         'ending_time',
