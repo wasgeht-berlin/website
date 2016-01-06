@@ -57,11 +57,11 @@
             },
 
             previousMonth() {
-                return moment(this.date).subtract(1, 'M');
+                return moment(this.date).subtract({ months: 1 });
             },
 
             nextMonth() {
-                return moment(this.date).add(1, 'M');
+                return moment(this.date).add({ months: 1 });
             },
 
             daysInMonth() {
@@ -91,7 +91,7 @@
                 var weeksEstimate = Math.ceil(this.daysInMonth / 7) + 1;
 
                 // remove the overflow week if the month ends on the last day of the week
-                if (this.date.clone().day(0).add(1, 'M').subtract(1, 'd').weekday() == 6) {
+                if (moment(this.date).day(0).add({months: 1}).subtract({days: 1}).weekday() == 6) {
                     weeksEstimate -= 1;
                 }
 

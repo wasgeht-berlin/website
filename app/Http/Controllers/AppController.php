@@ -11,9 +11,7 @@ class AppController extends Controller
 {
     public function index()
     {
-        $events = Event::take(10)->get();
-
-        return view('index', compact('events'));
+        return view('index');
     }
 
     public function data(Request $request)
@@ -26,28 +24,15 @@ class AppController extends Controller
                     break;
 
                 case 'events':
+                    // NOTE: This will be replaced by a proper API once the client side is fully stubbed out
                     $numItems = 15;
                     if (isset($action[1]) && is_numeric($action[1])) {
                         $numItems = $action[1];
                     }
 
-                    $events = Event::with('location')->paginate($numItems);
+                    $events = Event::with(['location', 'tags'])->paginate($numItems);
 
                     return response()->json($events);
-
-//                    $skip = 0;
-//                    if (isset($action[1]) && is_numeric($action[1]))
-//                    {
-//                        $skip = $action[1];
-//                    }
-//
-//                    $get = 10;
-//                    if (isset($action[2]) && is_numeric($action[2]))
-//                    {
-//                        $get = $action[2];
-//                    }
-//
-//                    return Event::with('location')->skip($skip)->take($get)->get();
             }
         }
 
@@ -81,7 +66,11 @@ class AppController extends Controller
 
     public function about()
     {
-        return view('about');
+        $attribution_md = file_get_contents(base_path('attribution.md'));
+
+        $attribution = \Parsedown::instance()->parse($attribution_md);
+
+        return view('about', compact('attribution'));
     }
 
     public function gh($repository)

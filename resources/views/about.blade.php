@@ -6,4 +6,6 @@
     <p>
         {{-- TODO: Short explanation on what this is --}}
     </p>
+
+    {!! $attribution !!}
 @stop

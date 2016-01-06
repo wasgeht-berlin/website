@@ -23,4 +23,9 @@ class Event extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'events_tags');
+    }
 }
