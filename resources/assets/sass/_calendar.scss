@@ -64,7 +64,8 @@ $calendar-border: 1px solid $calendar-border-color;
 
 .calendar-day-body {
   height: 8em;
-  overflow: scroll;
+  overflow-y: scroll;
+  width: 100%;
   padding: .3em;
 
   ul {
