@@ -18,3 +18,11 @@ Route::get('/contribute', ['uses' => 'AppController@contribute', 'as' => 'app.co
 Route::get('/about', ['uses' => 'AppController@about', 'as' => 'app.about']);
 
 Route::get('/data', ['uses' => 'AppController@data', 'as' => 'app.data']);
+
+Route::group(['prefix' => '/api'], function () {
+    Route::post('/provider_update', [
+        'uses' => 'AppController@update',
+        'as' => 'api.provider_update',
+        'middleware' => ['hooks.github']
+    ]);
+});

@@ -8,3 +8,6 @@ storage/database.sqlite
 
 public/js
 public/fonts
+public/img/icons.png
+
+resources/assets/sass/_icons.scss

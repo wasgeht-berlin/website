@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Jobs\UpdateProviders;
 use App\Model\Event;
 use GrahamCampbell\GitHub\GitHubManager;
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 
 class AppController extends Controller
@@ -73,9 +75,32 @@ class AppController extends Controller
         return view('about', compact('attribution'));
     }
 
-    public function gh($repository)
+    public function update(Request $request)
     {
-        // TODO: github webhook for autoupdating the data-providers
-        // NOTE: should extract this thing as a library from the oparl spec website
+        $result = 'Scheduled update.';
+
+        switch ($request->header('x-github-event')) {
+            case 'push':
+                $this->dispatch(new UpdateProviders());
+                break;
+
+            case 'pull_request':
+                $payload = json_decode($request->getContent(), true);
+
+                if ($payload['action'] == 'closed' && $payload['merged']) {
+                    $this->dispatch(new UpdateProviders());
+                    break;
+                }
+
+                $result = 'No merge happened. Nothing to do.';
+                break;
+
+            case 'ping':
+            default:
+                $result = Inspiring::quote();
+                break;
+        }
+
+        return response()->json(compact('result'));
     }
 }
