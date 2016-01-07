@@ -41,6 +41,7 @@ class CreateGitHubIssue extends Job implements SelfHandling
         $searchParams .= urlencode($this->title);
 
         $search = $gm->api('search')->issues($searchParams);
+        return;
 
         dd($search);
 
