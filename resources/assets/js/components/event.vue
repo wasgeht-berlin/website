@@ -7,20 +7,23 @@
                 <p>{{ event.description }}</p>
             </div>
             <div class="col-xs-12 col-sm-4">
+                <a href="{{ event.url }}">Website</a>
+                <br />
+                <br />
+
                 <strong>Beginnt:</strong>
-                <br />
-                <br />
                 <time>{{ event.starting_time | dateformat 'LLL'}}</time>
+                <br />
+
                 <template v-if="event.ending_time != null">
-                    <br />
                     <br />
                     <strong>Endet:</strong>
                     <br />
-                    <br />
                     <time>{{ event.ending_time | dateformat 'LLL'}}</time>
-                </template>
-                <template v-if="event.location.human_street_address">
                     <br />
+                </template>
+
+                <template v-if="event.location.human_street_address != null">
                     <br />
                     <address v-html="event.location.human_street_address | nl2br"></address>
                 </template>
