@@ -8,7 +8,7 @@
             <ul>
                 <template v-for="event in events">
                     <li >
-                        <span class="calendar-event-time">{{ event.starting_time | dateformat 'hh:ss' }}</span>
+                        <span class="calendar-event-time">{{ event.starting_time | dateformat 'HH:ss' }}</span>
                         <span class="calendar-event-title">{{ event.title }}</span>
                     </li>
                 </template>
