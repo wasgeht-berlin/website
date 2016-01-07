@@ -14,7 +14,8 @@
         "elasticsearch/elasticsearch": "^2.1",
         "cocur/slugify": "^1.4",
         "symfony/process": "^2.7",
-        "symfony/yaml": "^2.7"
+        "symfony/yaml": "^2.7",
+        "guzzlehttp/guzzle": "~5.3|~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
