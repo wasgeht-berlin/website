@@ -64,6 +64,7 @@ class RunScraper extends Job implements SelfHandling
 
     protected function raiseIssue($title, $body, array $labels = [])
     {
+        if (strlen($body) == 0) $body = $title;
         dispatch(new CreateGitHubIssue('wasgeht-berlin', 'data-providers', $title, $body, $labels));
     }
 
@@ -84,79 +85,9 @@ class RunScraper extends Job implements SelfHandling
         $events = $this->parseOutput($config, $output);
 
         foreach ($events as $info) {
-            try {
-                $infoKeys = array_keys($info);
+            if (!$this->validateEvent($info)) continue;
 
-                if (array_diff(['location', 'title', 'description', 'url', 'hash'], $infoKeys) !== []
-                    || !array_key_exists('human_name', $info['location'])
-                ) {
-                    throw new InvalidEventException("Invalid format.");
-                }
-            } catch (InvalidEventException $e) {
-                $dump = json_encode($info, JSON_PRETTY_PRINT);
-
-                $this->raiseIssue(
-                    "{$this->name} emits invalid events.",
-                    "{$this->name} emits an invalid event format. This is most likely due"
-                    . "to missing required keys. Below is a dump of the offending event info:\n\n"
-                    . "```json\n{$dump}\n```\n",
-                    ['scraper', 'bug']
-                );
-
-                continue;
-            }
-
-            $loc = Location::whereHumanName($info['location']['human_name'])->first();
-
-            if (!$loc) {
-                // TODO: validate input types
-
-                $loc = Location::create([
-                    'human_name' => $info['location']['human_name'],
-                ]);
-
-                if (isset($info['location']['human_street_address']))
-                    $loc->human_street_address = $info['location']['human_street_address'];
-
-                if (isset($info['location']['lat']))
-                    $loc->lat = $info['location']['lat'];
-
-                if (isset($info['location']['lon']))
-                    $loc->lon = $info['location']['lon'];
-
-                if (isset($info['location']['url']))
-                    $loc->url = $info['location']['url'];
-
-                $loc->save();
-            }
-
-            $event = Event::whereHash($info['hash'])->first();
-
-            if (!$event) {
-                // TODO: validate input types
-
-                $event = Event::create([
-                    'title'         => $info['title'],
-                    'description'   => $info['description'],
-                    'hash'          => $info['hash'],
-                    'starting_time' => Carbon::parse($info['starting_time']),
-                    'url'           => $info['url'],
-                ]);
-
-                if (isset($info['ending_time']))
-                    $event->ending_time = Carbon::parse($info['ending_time']);
-
-                if (isset($info['notes']))
-                    $event->notes = $info['notes'];
-
-                $event->location()->associate($loc);
-
-                if (isset($info['tags'])) {
-                    // TODO: add tags
-                }
-
-                $event->save();
-            }
+            $this->parseEvent($info);
         }
     }
 
@@ -187,5 +118,105 @@ class RunScraper extends Job implements SelfHandling
         }
 
         return $result;
+    }
+
+    /**
+     * @param $info
+     * @return bool
+     **/
+    protected function validateEvent($info)
+    {
+        try {
+            $infoKeys = array_keys($info);
+
+            if (array_diff(['location', 'title', 'description', 'url', 'hash'], $infoKeys) !== []
+                || !array_key_exists('human_name', $info['location'])
+            ) {
+                throw new InvalidEventException("Invalid format.");
+            }
+
+            return true;
+        } catch (InvalidEventException $e) {
+            $dump = json_encode($info, JSON_PRETTY_PRINT);
+
+            $this->raiseIssue(
+                "{$this->name} emits invalid events.",
+                "{$this->name} emits an invalid event format. This is most likely due"
+                . "to missing required keys. Below is a dump of the offending event info:\n\n"
+                . "```json\n{$dump}\n```\n",
+                ['scraper', 'bug']
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * @param $info
+     **/
+    protected function parseEvent($info)
+    {
+        $loc = Location::whereHumanName($info['location']['human_name'])->first();
+
+        if (!$loc) $loc = $this->createLocation($info);
+
+        $event = Event::whereHash($info['hash'])->first();
+
+        if (!$event) $this->createEvent($info, $loc);
+    }
+
+    /**
+     * @param $info
+     * @return Location
+     **/
+    protected function createLocation($info)
+    {
+        // TODO: validate input types
+
+        $loc = Location::create([
+            'human_name' => $info['location']['human_name'],
+        ]);
+
+        if (isset($info['location']['human_street_address']))
+            $loc->human_street_address = $info['location']['human_street_address'];
+
+        if (isset($info['location']['lat'])) $loc->lat = $info['location']['lat'];
+        if (isset($info['location']['lon'])) $loc->lon = $info['location']['lon'];
+        if (isset($info['location']['url'])) $loc->url = $info['location']['url'];
+
+        $loc->save();
+
+        return $loc;
+    }
+
+    /**
+     * @param $info
+     * @param $loc Location
+     **/
+    protected function createEvent($info, $loc)
+    {
+        // TODO: validate input types
+
+        $event = Event::create([
+            'title'         => $info['title'],
+            'description'   => $info['description'],
+            'hash'          => $info['hash'],
+            'starting_time' => Carbon::parse($info['starting_time']),
+            'url'           => $info['url'],
+        ]);
+
+        if (isset($info['ending_time']))
+            $event->ending_time = Carbon::parse($info['ending_time']);
+
+        if (isset($info['notes']))
+            $event->notes = $info['notes'];
+
+        $event->location()->associate($loc);
+
+        if (isset($info['tags'])) {
+            // TODO: add tags
+        }
+
+        $event->save();
     }
 }

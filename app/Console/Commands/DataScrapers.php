@@ -66,18 +66,7 @@ class DataScrapers extends Command
             if ($this->option('all') || $scrapers->count() < self::JOBS_PER_CALL) {
                 $this->scheduleScrapers($scrapers);
             } else {
-                $lastJob = 0;
-                if ($fs->exists('lastScraperRun'))
-                    $lastJob = $fs->get('lastScraperRun');
-
-                $scrapers->slice($lastJob, self::JOBS_PER_CALL);
-                $this->scheduleScrapers($scrapers);
-
-                $nextJob = 0;
-                if ($lastJob + self::JOBS_PER_CALL > $scrapers->count())
-                    $nextJob = $lastJob + self::JOBS_PER_CALL;
-
-                $fs->put('lastScraperRun', $nextJob);
+                $this->processChunk($fs, $scrapers);
             }
         }
 
@@ -101,5 +90,25 @@ class DataScrapers extends Command
         $scrapers->each(function ($scraperName) {
             $this->scheduleScraperRun($scraperName);
         });
+    }
+
+    /**
+     * @param $fs Filesystem
+     * @param $scrapers Collection
+     **/
+    protected function processChunk(Filesystem $fs, Collection $scrapers)
+    {
+        $lastJob = 0;
+        if ($fs->exists('lastScraperRun'))
+            $lastJob = $fs->get('lastScraperRun');
+
+        $scrapers->slice($lastJob, self::JOBS_PER_CALL);
+        $this->scheduleScrapers($scrapers);
+
+        $nextJob = 0;
+        if ($lastJob + self::JOBS_PER_CALL > $scrapers->count())
+            $nextJob = $lastJob + self::JOBS_PER_CALL;
+
+        $fs->put('lastScraperRun', $nextJob);
     }
 }
