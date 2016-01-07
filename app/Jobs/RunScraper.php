@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\InvalidEventException;
 use App\Model\Event;
 use App\Model\Location;
 use Carbon\Carbon;
@@ -35,7 +36,8 @@ class RunScraper extends Job implements SelfHandling
 
         $config = $this->loadConfig($fs, $scraperDir);
         if (is_null($config)) {
-            // TODO: automatically send an issue to github notifying about the missing configuration file?
+            $this->raiseIssue("{$this->name} has no valid scraper configuration", '', ['scraper', 'bug']);
+
             return;
         }
 
@@ -60,6 +62,11 @@ class RunScraper extends Job implements SelfHandling
         return $config;
     }
 
+    protected function raiseIssue($title, $body, array $labels = [])
+    {
+        dispatch(new CreateGitHubIssue('wasgeht-berlin', 'data-providers', $title, $body, $labels));
+    }
+
     /**
      * @param $config
      * @param $scraperDir
@@ -77,38 +84,77 @@ class RunScraper extends Job implements SelfHandling
         $events = $this->parseOutput($config, $output);
 
         foreach ($events as $info) {
-            // TODO: fill missing optional keys with null on info arrays
-            // TODO: fail early on missing required keys
+            try {
+                $infoKeys = array_keys($info);
 
-            /*
-             * TODO:
-             *
-             * - find or create location
-             * - add tags
-             */
+                if (array_diff(['location', 'title', 'description', 'url', 'hash'], $infoKeys) !== []
+                    || !array_key_exists('human_name', $info['location'])
+                ) {
+                    throw new InvalidEventException("Invalid format.");
+                }
+            } catch (InvalidEventException $e) {
+                $dump = json_encode($info, JSON_PRETTY_PRINT);
+
+                $this->raiseIssue(
+                    "{$this->name} emits invalid events.",
+                    "{$this->name} emits an invalid event format. This is most likely due"
+                    . "to missing required keys. Below is a dump of the offending event info:\n\n"
+                    . "```json\n{$dump}\n```\n",
+                    ['scraper', 'bug']
+                );
+
+                continue;
+            }
 
             $loc = Location::whereHumanName($info['location']['human_name'])->first();
 
             if (!$loc) {
+                // TODO: validate input types
+
                 $loc = Location::create([
                     'human_name' => $info['location']['human_name'],
-                    // TODO: human_street_address, lat, lng, url
                 ]);
+
+                if (isset($info['location']['human_street_address']))
+                    $loc->human_street_address = $info['location']['human_street_address'];
+
+                if (isset($info['location']['lat']))
+                    $loc->lat = $info['location']['lat'];
+
+                if (isset($info['location']['lon']))
+                    $loc->lon = $info['location']['lon'];
+
+                if (isset($info['location']['url']))
+                    $loc->url = $info['location']['url'];
+
+                $loc->save();
             }
 
             $event = Event::whereHash($info['hash'])->first();
 
             if (!$event) {
+                // TODO: validate input types
+
                 $event = Event::create([
                     'title'         => $info['title'],
                     'description'   => $info['description'],
                     'hash'          => $info['hash'],
                     'starting_time' => Carbon::parse($info['starting_time']),
                     'url'           => $info['url'],
-                    // TODO: hash, notes
                 ]);
 
+                if (isset($info['ending_time']))
+                    $event->ending_time = Carbon::parse($info['ending_time']);
+
+                if (isset($info['notes']))
+                    $event->notes = $info['notes'];
+
                 $event->location()->associate($loc);
+
+                if (isset($info['tags'])) {
+                    // TODO: add tags
+                }
+
                 $event->save();
             }
         }

@@ -20,6 +20,7 @@ class AnnotateLocation extends Job implements SelfHandling
     {
         $client = new Client('http://overpass-api.de');
 
+        // TODO: extend this query to find more venues
         $query = sprintf('[out:json];node["name"="%s"]["addr:city"="Berlin"];out;', $this->location->human_name);
         $url = "/api/interpreter?data=" . urlencode($query);
 
