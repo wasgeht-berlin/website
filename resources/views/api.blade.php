@@ -27,6 +27,8 @@
 
         <h3>Paginierung</h3>
 
+        <code>/api/v1/event/?limit=10&page=2</code>
+
         <p>
             Sollte eine auszugebende Auflistung mehr als 20 Elemente enthalten, wird sie automatisch paginiert.
             Das ausgegebene JSON enthält dann neben dem <code>data</code>-Array ein <code>meta</code>-Array mit
@@ -39,7 +41,5 @@
             Um zwischen Seiten zu wechseln kann der <code>page</code>-Parameter verwendet werden. Zur Anpassung
             der Elemente pro Seite, kann der <code>limit</code>-Parameter mit angegeben werden.
         </p>
-
-        <code>/api/v1/event/?limit=10&page=2</code>
     </div>
 @stop
