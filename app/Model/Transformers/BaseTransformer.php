@@ -26,6 +26,17 @@ abstract class BaseTransformer extends TransformerAbstract
             return $class;
         }
 
+        if ($type == 'string')
+        {
+            if (is_numeric($value)) {
+                if (preg_match('/\d+\.\d+/', $value)) return $this->formatFloat($value);
+                if (preg_match('/\d+/', $value)) return $this->formatInteger($value);
+            } else
+            {
+                return $this->formatString($value);
+            }
+        }
+
         $typeFormatMethod = sprintf('format%s', ucfirst($type));
         if (method_exists($this, $typeFormatMethod)) return $this->{$typeFormatMethod}($value);
 
