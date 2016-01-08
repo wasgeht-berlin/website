@@ -17,12 +17,17 @@ Route::get('/map', ['uses' => 'AppController@map', 'as' => 'app.map']);
 Route::get('/contribute', ['uses' => 'AppController@contribute', 'as' => 'app.contribute']);
 Route::get('/about', ['uses' => 'AppController@about', 'as' => 'app.about']);
 
-Route::get('/data', ['uses' => 'AppController@data', 'as' => 'app.data']);
+Route::group(['prefix' => '/api/v1'], function () {
+    Route::pattern('id', '\d+');
 
-Route::group(['prefix' => '/api'], function () {
     Route::post('/provider_update', [
         'uses' => 'AppController@update',
-        'as' => 'api.provider_update',
         'middleware' => ['hooks.github']
     ]);
+
+    Route::get('/event', ['uses' => 'API\EventController@index']);
+    Route::get('/event/{id}', ['uses' => 'API\EventController@get']);
+
+    Route::get('/location', ['uses' => 'API\LocationController@index']);
+    Route::get('/location/{id}', ['uses' => 'API\LocationController@get']);
 });
