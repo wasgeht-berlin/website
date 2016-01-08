@@ -11,19 +11,6 @@
 |
 */
 
-// FIXME: Remove this once actual data is being used
-function createTestEvents() {
-    $locationCount = 10;
-    factory(App\Model\Location::class, $locationCount)->create();
-
-    factory(App\Model\Event::class, 50)
-        ->create()
-        ->each(function ($e) use ($locationCount) {
-            $loc = App\Model\Location::find(random_int(1, $locationCount));
-            $loc->events()->save($e);
-        });
-}
-
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
