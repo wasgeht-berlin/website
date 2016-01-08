@@ -5,7 +5,8 @@ class APIRequest extends Request
     public function rules()
     {
         return [
-            'limit' => 'integer|min:1|max:50'
+            'limit' => 'integer|min:1|max:50',
+            'page'  => 'integer|min:1'
         ];
     }
 }

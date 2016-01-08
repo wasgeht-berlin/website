@@ -3,6 +3,7 @@
 use App\Http\Requests\APIRequest;
 use App\Model\Location;
 use App\Model\Transformers\LocationTransformer;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
@@ -15,7 +16,8 @@ class LocationController extends APIController
 
         $locations = Location::paginate($limit);
 
-        $resource = new Collection($locations, new LocationTransformer(), 'location');
+        $resource = new Collection($locations->items(), new LocationTransformer(), 'location');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($locations));
 
         return $this->fractal->createData($resource)->toArray();
     }
