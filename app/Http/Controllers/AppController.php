@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Jobs\UpdateProviders;
 use App\Model\Event;
-use GrahamCampbell\GitHub\GitHubManager;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 
@@ -51,26 +51,21 @@ class AppController extends Controller
         return view('calendar');
     }
 
-    public function contribute(GitHubManager $gh)
+    public function contribute(Filesystem $fs)
     {
-        $contributing_md = \Cache::remember('app.contribute.md', 10, function () use ($gh) {
-            return $gh->repo()
-                ->contents()
-                ->download('wasgeht-berlin', 'data-providers', 'CONTRIBUTING.md');
-        });
+        $markdown = $fs->get('providers/CONTRIBUTING.md');
+        $markdown = preg_replace('/^.+\n/', '', $markdown);
 
-        $markdown = \Parsedown::instance()->parse($contributing_md);
+        $html = \Parsedown::instance()->parse($markdown);
 
-        // FIXME: remove first heading level
-
-        return view('contribute', compact('markdown'));
+        return view('contribute', compact('html'));
     }
 
     public function about()
     {
-        $attribution_md = file_get_contents(base_path('attribution.md'));
+        $markdown = file_get_contents(base_path('attribution.md'));
 
-        $attribution = \Parsedown::instance()->parse($attribution_md);
+        $attribution = \Parsedown::instance()->parse($markdown);
 
         return view('about', compact('attribution'));
     }
