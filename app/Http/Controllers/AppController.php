@@ -98,4 +98,54 @@ class AppController extends Controller
 
         return response()->json(compact('result'));
     }
+
+    public function api()
+    {
+        $event = [
+            "data" => [
+                "id"            => 2,
+                "title"         => "Event Titel",
+                "description"   => "Event Beschreibung",
+                "starting_time" => "2016-01-09T23:00:00+0100",
+                "ending_time"   => null,
+                "url"           => "http://link-zum-eve.nt",
+                "hash"          => "eindeutigesHash",
+                "tags"          => [],
+                "location"      => '<locationObject>',
+                "type"          => "event",
+            ],
+        ];
+
+        $location = [
+            "data" => [
+                "id"                   => 3,
+                "human_name"           => "Lido",
+                "human_street_address" => "Lido\nCuvrystraße 7\n10997 Berlin",
+                "url"                  => "http://www.lido-berlin.de",
+                "lat"                  => 52.4992474,
+                "lon"                  => 13.4451043,
+                "osm_feature_id"       => 360111407,
+                "type"                 => "location",
+            ]
+        ];
+
+        $pagination = ["meta" => [
+            "pagination" => [
+                "total"        => 20,
+                "count"        => 10,
+                "per_page"     => 10,
+                "current_page" => 1,
+                "total_pages"  => 2,
+                "links"        => [
+                    "next" => "link zum nächsten Element",
+                ],
+            ],
+        ]];
+
+        $eventExample = json_encode($event, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $locationExample = json_encode($location, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        $paginationExample = json_encode($pagination, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        return view('api', compact('eventExample', 'locationExample', 'paginationExample'));
+    }
 }

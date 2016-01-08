@@ -27,6 +27,16 @@
     </div>
 
     @yield('content')
+
+    <div class="row">
+        <footer class="col-xs-12">
+            <ul class="list-unstyled list-inline text-center">
+                <li><a href="/about">Über</a></li>
+                <li><a href="/api">API</a></li>
+                <li><a href="https://github.com/wasgeht-berlin/">GitHub</a></li>
+            </ul>
+        </footer>
+    </div>
 </div>
 
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>

@@ -17,6 +17,8 @@ Route::get('/map', ['uses' => 'AppController@map', 'as' => 'app.map']);
 Route::get('/contribute', ['uses' => 'AppController@contribute', 'as' => 'app.contribute']);
 Route::get('/about', ['uses' => 'AppController@about', 'as' => 'app.about']);
 
+Route::get('/api', ['uses' => 'AppController@api', 'as' => 'app.api']);
+
 Route::group(['prefix' => '/api/v1'], function () {
     Route::pattern('id', '\d+');
 

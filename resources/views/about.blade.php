@@ -1,11 +1,13 @@
 @extends ('base')
 
 @section ('content')
-    <h2>Was ist das hier?</h2>
+    <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <h2>Was ist das hier?</h2>
 
-    <p>
-        {{-- TODO: Short explanation on what this is --}}
-    </p>
+        <p>
+            {{-- TODO: Short explanation on what this is --}}
+        </p>
 
-    {!! $attribution !!}
+        {!! $attribution !!}
+    </div>
 @stop
