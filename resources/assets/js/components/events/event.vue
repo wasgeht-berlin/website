@@ -8,23 +8,23 @@
             </div>
             <div class="col-xs-12 col-sm-4">
                 <a href="{{ event.url }}">Website</a>
-                <br />
-                <br />
+                <br/>
+                <br/>
 
                 <strong>Beginnt:</strong>
                 <time>{{ event.starting_time | dateformat 'LLL'}}</time>
-                <br />
+                <br/>
 
                 <template v-if="event.ending_time != null">
-                    <br />
+                    <br/>
                     <strong>Endet:</strong>
-                    <br />
+                    <br/>
                     <time>{{ event.ending_time | dateformat 'LLL'}}</time>
-                    <br />
+                    <br/>
                 </template>
 
                 <template v-if="event.location.human_street_address != null">
-                    <br />
+                    <br/>
                     <address v-html="event.location.human_street_address | nl2br"></address>
                 </template>
             </div>

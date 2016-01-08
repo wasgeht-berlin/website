@@ -16,41 +16,27 @@ Vue.filter('dateformat', function (datestr, format) {
     return moment(datestr).format(format);
 });
 
+var api = {
+    events : Vue.resource('/api/v1/event'),
+    locations : Vue.resource('/api/v1/location')
+};
+
 var vm = new Vue({
     el: 'body',
 
     data: {
-        events: [],
-        currentPage: 0,
-        perPage: 15,
-        pageCount: 0
+        events: null
     },
 
     ready: function () {
-        // TODO: provide the events object as a navigable vue-resource
-        this.$http.get('/data?action=events.' + this.perPage, function (res) {
-            this.$set('events', res.data);
-            this.$set('currentPage', res.current_page);
-            this.$set('pageCount', res.last_page);
-        });
+        api.events.query({}).then(function (result) {
+            vm.$set('events', result.data);
+        })
     },
 
     components: {
-        Event: require('./components/event.vue'),
+        EventList: require('./components/events/list.vue'),
         Month: require('./components/calendar/month.vue'),
         Map: require('./components/map.vue')
     }
 });
-
-//        'loadMore': function () {
-//            if (this.currentPage < this.pageCount - 1) {
-//                this.currentPage += 1;
-//            }
-//
-//            this.$http.get('/data?action=events.' + this.perPage + '&page=' + this.currentPage, function (res) {
-//                this.$set('events', res.data);
-//                this.$set('currentPage', res.current_page);
-//                this.$set('pageCount', res.last_page);
-//
-//                document.getElementById('eventList').scrollIntoView();
-//            })

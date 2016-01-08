@@ -119,10 +119,12 @@
             'eventsInDay': function (day) {
                 var events = [];
 
-                for (event in this.events) {
-                    if (this.events.hasOwnProperty(event)
-                            && moment(this.events[event].starting_time).isSame(day, 'day')) {
-                        events.push(this.events[event]);
+                if (!this.events) return [];
+
+                for (event in this.events.data) {
+                    if (this.events.data.hasOwnProperty(event)
+                            && moment(this.events.data[event].starting_time).isSame(day, 'day')) {
+                        events.push(this.events.data[event]);
                     }
                 }
 
