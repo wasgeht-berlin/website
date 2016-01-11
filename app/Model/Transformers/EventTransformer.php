@@ -23,6 +23,9 @@ class EventTransformer extends BaseTransformer
 
     public function includeLocation(Event $event)
     {
-        return new Item($event->location, new LocationTransformer(), 'location');
+        if ($event->location)
+        {
+            return new Item($event->location, new LocationTransformer(), 'location');
+        }
     }
 }

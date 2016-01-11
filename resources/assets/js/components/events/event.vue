@@ -1,6 +1,8 @@
 <template>
     <div class="event">
-        <h2>{{ event.title }} @ {{ event.location.human_name }}</h2>
+        <h2>
+            {{ event.title }}
+        </h2>
 
         <div class="row">
             <div class="col-xs-12 col-sm-8">
@@ -23,9 +25,10 @@
                     <br/>
                 </template>
 
-                <template v-if="event.location.human_street_address != null">
+                <template v-show="event.location != null">
                     <br/>
-                    <address v-html="event.location.human_street_address | nl2br"></address>
+                    <address v-show="event.location.human_street_address != null" v-html="event.location.human_street_address | nl2br"></address>
+                    <span v-else>{{ event.location.human_name }}</span>
                 </template>
             </div>
         </div>

@@ -9,14 +9,14 @@
     var L = require('leaflet');
 
     export default {
-        data: function () {
+        data() {
             return {
                 'mapHeight': 300
             };
         },
 
         computed: {
-            'mapStyle': function () {
+            mapStyle() {
                 return 'height: ' + this.mapHeight + 'px;' +
                         'position: relative; top: 0';
             }
@@ -31,7 +31,7 @@
             }
         },
 
-        ready: function () {
+        ready() {
             var map = L.map('map').setView([this.lon, this.lat], 11);
 
             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {

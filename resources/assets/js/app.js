@@ -35,6 +35,7 @@ var vm = new Vue({
     },
 
     components: {
+        Filter: require('./components/filter.vue'),
         EventList: require('./components/events/list.vue'),
         Month: require('./components/calendar/month.vue'),
         Map: require('./components/map.vue')

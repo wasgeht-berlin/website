@@ -2,7 +2,7 @@
 
 @section ('content')
     <div class="row">
-        {{-- // TODO: search/filter --}}
+        <filter :events.sync="events"></filter>
     </div>
     <div class="row">
         <event-list :events="events"></event-list>
