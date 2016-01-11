@@ -29,6 +29,8 @@ Route::group(['prefix' => '/api/v1'], function () {
 
     Route::get('/event', ['uses' => 'API\EventController@index']);
     Route::get('/event/{id}', ['uses' => 'API\EventController@get']);
+    Route::get('/event/search', ['uses' => 'API\EventController@search']);
+    Route::post('/event/search', ['uses' => 'API\EventController@search']);
 
     Route::get('/location', ['uses' => 'API\LocationController@index']);
     Route::get('/location/{id}', ['uses' => 'API\LocationController@get']);

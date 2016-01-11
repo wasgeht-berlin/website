@@ -12,8 +12,7 @@ class EventController extends APIController
 {
     public function index(APIRequest $request)
     {
-        $limit = 20;
-        if ($request->has('limit')) $limit = $request->input('limit');
+        $limit = $this->getItemsPerPage($request);
 
         $events = Event::with(['location', 'tags'])->paginate($limit);
 
@@ -28,6 +27,20 @@ class EventController extends APIController
         $event = Event::findOrFail($id);
 
         $resource = new Item($event, new EventTransformer(), 'event');
+
+        return $this->fractal->createData($resource)->toArray();
+    }
+
+    public function search(APIRequest $request)
+    {
+        if (!$request->has('query')) return response('', 400)->json([
+            'error' => 'The /search endpoint requires a query parameter'
+        ]);
+
+        $results = Event::elasticFind($request->input('query'));
+
+        $resource = new Collection($results, new EventTransformer(), 'event');
+        // TODO: pagination
 
         return $this->fractal->createData($resource)->toArray();
     }

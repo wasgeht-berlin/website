@@ -11,8 +11,7 @@ class LocationController extends APIController
 {
     public function index(APIRequest $request)
     {
-        $limit = 20;
-        if ($request->has('limit')) $limit = $request->input('limit');
+        $limit = $this->getItemsPerPage($request);
 
         $locations = Location::paginate($limit);
 

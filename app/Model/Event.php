@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
+class Event extends ElasticModel
 {
     use SoftDeletes;
 
@@ -19,6 +19,8 @@ class Event extends Model
 
     protected $dates = ['starting_time', 'ending_time'];
 
+    protected $hidden = ['notes', 'location_id'];
+
     public function location()
     {
         return $this->belongsTo(Location::class);
@@ -27,5 +29,14 @@ class Event extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'events_tags');
+    }
+
+    protected function toElasticArray()
+    {
+        $array = $this->toArray();
+
+        // TODO: index tags
+
+        return $array;
     }
 }

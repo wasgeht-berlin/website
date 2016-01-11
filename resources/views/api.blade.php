@@ -39,7 +39,10 @@
 
         <p>
             Um zwischen Seiten zu wechseln kann der <code>page</code>-Parameter verwendet werden. Zur Anpassung
-            der Elemente pro Seite, kann der <code>limit</code>-Parameter mit angegeben werden.
+            der Elemente pro Seite, kann ein <code>limit</code>-Parameter zwischen {{ config('api.items_per_page.min') }}
+            und {{ config('api.items_per_page.max') }} mit angegeben werden.
+
+            <em>Standardmäßig werden {{ config('api.items_per_page.default') }} Elemente pro Seite ausgegeben.</em>
         </p>
     </div>
 @stop
