@@ -32,20 +32,15 @@ class CreateGitHubIssue extends Job implements SelfHandling
 
     public function handle(GitHubManager $gm)
     {
-        // TODO: first check if the issue already exists
-        $searchParams = sprintf('type:issue+in:title+user:%s+repo:%s+',
-            urlencode($this->user),
-            urlencode($this->repo)
+        $searchParams = sprintf('user:%s repo:%s state:open in:title %s',
+            $this->user,
+            $this->repo,
+            $this->title
         );
 
-        $searchParams .= urlencode($this->title);
+        $search = $gm->api('search')->issues($searchParams, 'created', 'desc');
 
-        $search = $gm->api('search')->issues($searchParams);
-        return;
-
-        dd($search);
-
-        if (count($search) == 0) {
+        if ($search['total_count'] == 0) {
             $createParams = [
                 'title'  => $this->title,
                 'body'   => $this->body,
