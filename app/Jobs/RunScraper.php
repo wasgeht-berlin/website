@@ -13,16 +13,20 @@ use Symfony\Component\Yaml\Parser;
 
 class RunScraper extends Job implements SelfHandling
 {
-    protected $name;
+    protected $name = '';
+    protected $raise = false;
 
     /**
      * Create a new job instance.
      *
+     * @param $name string directory name of the scraper to be run
+     * @param $raise boolean if this is true, run errors will be raised as issues on GitHub
      * @return void
      */
-    public function __construct($name)
+    public function __construct($name, $raise = false)
     {
         $this->name = $name;
+        $this->raise = $raise;
     }
 
     /**
@@ -64,6 +68,8 @@ class RunScraper extends Job implements SelfHandling
 
     protected function raiseIssue($title, $body, array $labels = [])
     {
+        if (!$this->raise) return;
+
         if (strlen($body) == 0) $body = $title;
         dispatch(new CreateGitHubIssue('wasgeht-berlin', 'data-providers', $title, $body, $labels));
     }
