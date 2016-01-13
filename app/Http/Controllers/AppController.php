@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Jobs\UpdateProviders;
 use App\Model\Event;
+use Healey\Robots\Robots;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -14,31 +15,6 @@ class AppController extends Controller
     public function index()
     {
         return view('index');
-    }
-
-    public function data(Request $request)
-    {
-        if ($request->has('action')) {
-            $action = explode('.', $request->input('action'));
-
-            switch ($action[0]) {
-                default:
-                    break;
-
-                case 'events':
-                    // NOTE: This will be replaced by a proper API once the client side is fully stubbed out
-                    $numItems = 15;
-                    if (isset($action[1]) && is_numeric($action[1])) {
-                        $numItems = $action[1];
-                    }
-
-                    $events = Event::with(['location', 'tags'])->paginate($numItems);
-
-                    return response()->json($events);
-            }
-        }
-
-        return response()->json([]);
     }
 
     public function map()
@@ -126,7 +102,7 @@ class AppController extends Controller
                 "lon"                  => 13.4451043,
                 "osm_feature_id"       => 360111407,
                 "type"                 => "location",
-            ]
+            ],
         ];
 
         $pagination = ["meta" => [
@@ -147,5 +123,19 @@ class AppController extends Controller
         $paginationExample = json_encode($pagination, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         return view('api', compact('eventExample', 'locationExample', 'paginationExample'));
+    }
+
+    public function robots()
+    {
+        $robots = new Robots();
+
+        if (app()->environment() == 'production') {
+            $robots->addUserAgent('*');
+            $robots->addAllow('*');
+        } else {
+            $robots->addDisallow('*');
+        }
+
+        return response($robots->generate(), 200, ['Content-type' => 'text/plain']);
     }
 }

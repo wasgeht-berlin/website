@@ -17,7 +17,8 @@
         "symfony/yaml": "^2.7",
         "guzzlehttp/guzzle": "~5.3|~6.0",
         "pda/pheanstalk": "^3.1",
-        "league/fractal": "^0.13.0"
+        "league/fractal": "^0.13.0",
+        "healey/robots": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

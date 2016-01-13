@@ -35,3 +35,5 @@ Route::group(['prefix' => '/api/v1'], function () {
     Route::get('/location', ['uses' => 'API\LocationController@index']);
     Route::get('/location/{id}', ['uses' => 'API\LocationController@get']);
 });
+
+Route::get('/robots.txt', ['uses' => 'AppController@robots']);
