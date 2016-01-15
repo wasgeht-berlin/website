@@ -17,6 +17,11 @@ class UpdateProviders extends Job implements SelfHandling
 
     protected $ghRepository = 'data-providers';
 
+    public function __construct(array $commits = [])
+    {
+        // TODO: use commits' added, removed, modified to construct a file list for faster updates
+    }
+
     public function handle(Filesystem $fs, GitHubManager $gh)
     {
         $this->fs = $fs;
@@ -76,6 +81,8 @@ class UpdateProviders extends Job implements SelfHandling
         $filePath = $this->providerStorage . $file['path'];
 
         if (!$this->fs->exists($filePath) || $fileList[$file['path']] != $file['sha']) {
+            // TODO: make sure that files are smaller than 1MB before downloading through the API
+            // TODO: use raw file access urls for download in other cases?
             $data = $this->gh->repo()->contents()->download($this->ghUser, $this->ghRepository, $file['path']);
             $this->fs->put($filePath, $data);
 
