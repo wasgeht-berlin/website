@@ -1,4 +1,6 @@
-<?php namespace App\Http\Requests;
+<?php
+
+namespace App\Http\Requests;
 
 class APIRequest extends Request
 {
@@ -19,6 +21,7 @@ class APIRequest extends Request
         $modelClass = sprintf('App\Model\%s', $modelName);
 
         if (class_exists($modelClass)) {
+            /* @var $instance \Illuminate\Database\Eloquent\Model */
             $instance = new $modelClass;
             $instance = call_user_func_array([$instance, 'newInstance'], [[], false]);
 
@@ -26,13 +29,23 @@ class APIRequest extends Request
 
             collect($dates)->flatMap(function ($date_field) {
                 return collect(['%s_after', '%s', '%s_before'])->map(function ($query) use ($date_field) {
-                    return [sprintf($query, $date_field) => 'date'];
+                    // TODO: date filter fields really should be validated as date-ish, but the builtin filter kind of does not do that
+                    return [sprintf($query, $date_field) => 'string'];
                 })->toArray();
             })->each(function ($date_filter) use (&$filters) {
                 $key = array_keys($date_filter)[0];
 
                 $filters[$key] = $date_filter[$key];
             });
+
+            $orderBy = $instance->getVisible();
+
+            if (count($orderBy) > 1) {
+                $orderBy = implode(',', $orderBy);
+
+                $filters['order_by'] = "string|in:{$orderBy}";
+                $filters['sort'] = "string|in:asc,desc";
+            }
         }
 
         return $filters;

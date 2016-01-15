@@ -50,16 +50,16 @@ class AppController extends Controller
     {
         $result = 'Scheduled update.';
 
+        $payload = json_decode($request->getContent(), true);
+
         switch ($request->header('x-github-event')) {
             case 'push':
-                $this->dispatch(new UpdateProviders());
+                $this->dispatch(new UpdateProviders($payload['commits']));
                 break;
 
             case 'pull_request':
-                $payload = json_decode($request->getContent(), true);
-
                 if ($payload['action'] == 'closed' && $payload['merged']) {
-                    $this->dispatch(new UpdateProviders());
+                    $this->dispatch(new UpdateProviders($payload['commits']));
                     break;
                 }
 

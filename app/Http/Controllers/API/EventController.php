@@ -17,7 +17,12 @@ class EventController extends APIController
         $events = Event::query();
 
         if ($request->has('starting_time_after')) {
-            $events = $events->where('starting_time', '>=', Carbon::parse($request->input('starting_time_after')));
+            $events = $events->where('starting_time', '>', Carbon::parse($request->input('starting_time_after')));
+        }
+
+        if ($request->has('order_by'))
+        {
+            $events->orderBy($request->input('order_by'), $request->input('sort', 'asc'));
         }
 
         $events = $events->with(['location', 'tags'])->paginate($limit);

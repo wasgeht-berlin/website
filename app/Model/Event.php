@@ -21,6 +21,8 @@ class Event extends ElasticModel
 
     protected $hidden = ['notes', 'location_id'];
 
+    protected $visible = ['id', 'title', 'description', 'starting_time', 'ending_time', 'hash', 'url'];
+
     public function location()
     {
         return $this->belongsTo(Location::class);

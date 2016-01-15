@@ -44,7 +44,11 @@
         methods: {
             forward() {
                 if (this.page < this.pageCount) {
-                    api.events.query({page: this.page + 1}).then(function (result) {
+                    api.events.query({
+                        page: this.page + 1,
+                        order_by: 'starting_time',
+                        starting_time_after: 'yesterday'
+                    }).then(function (result) {
                         vm.$set('events', result.data);
                     });
                 }
@@ -52,7 +56,11 @@
 
             back() {
                 if (this.page > 1) {
-                    api.events.query({page: this.page - 1}).then(function (result) {
+                    api.events.query({
+                        page: this.page - 1,
+                        order_by: 'starting_time',
+                        starting_time_after: 'yesterday'
+                    }).then(function (result) {
                         vm.$set('events', result.data);
                     });
                 }
