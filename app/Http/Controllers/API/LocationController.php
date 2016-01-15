@@ -13,7 +13,12 @@ class LocationController extends APIController
     {
         $limit = $this->getItemsPerPage($request);
 
-        $locations = Location::paginate($limit);
+        $locations = Location::query();
+
+        $locations = $this->processDateFilters($request, $locations);
+        $this->processOrdering($request, $locations);
+
+        $locations = $locations->paginate($limit);
 
         $resource = new Collection($locations->items(), new LocationTransformer(), 'location');
         $resource->setPaginator(new IlluminatePaginatorAdapter($locations));

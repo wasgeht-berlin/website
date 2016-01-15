@@ -44,5 +44,11 @@
 
             <em>Standardmäßig werden {{ config('api.items_per_page.default') }} Elemente pro Seite ausgegeben.</em>
         </p>
+
+        <h3>Filtern und Sortieren</h3>
+
+        <p>
+            <!-- TODO: API Documentation on filtering and sorting -->
+        </p>
     </div>
 @stop

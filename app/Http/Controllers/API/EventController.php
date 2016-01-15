@@ -3,7 +3,6 @@
 use App\Http\Requests\APIRequest;
 use App\Model\Event;
 use App\Model\Transformers\EventTransformer;
-use Carbon\Carbon;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -16,17 +15,10 @@ class EventController extends APIController
 
         $events = Event::query();
 
-        if ($request->has('starting_time_after')) {
-            $events = $events->where('starting_time', '>', Carbon::parse($request->input('starting_time_after')));
-        }
-
-        if ($request->has('order_by'))
-        {
-            $events->orderBy($request->input('order_by'), $request->input('sort', 'asc'));
-        }
+        $events = $this->processDateFilters($request, $events);
+        $this->processOrdering($request, $events);
 
         $events = $events->with(['location', 'tags'])->paginate($limit);
-
 
         $resource = new Collection($events->items(), new EventTransformer(), 'event');
         $resource->setPaginator(new IlluminatePaginatorAdapter($events));
