@@ -14,7 +14,7 @@
             <button class="btn btn-lg" @click="back()" v-if="page > 1">Zurück</button>
         </div>
         <div class="col-xs-12 col-md-6">
-            <button class="btn btn-lg" @click="forward()" v-if="page < maxPages">weiter</button>
+            <button class="btn btn-lg" @click="forward()" v-if="page < pageCount">weiter</button>
         </div>
     </div>
 </template>
