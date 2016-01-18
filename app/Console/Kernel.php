@@ -27,5 +27,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('data:scrapers')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('data:locations')->daily();
     }
 }
