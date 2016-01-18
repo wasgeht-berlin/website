@@ -29,7 +29,7 @@ var vm = new Vue({
     },
 
     ready: function () {
-        api.events.query().then(function (result) {
+        api.events.query({ order_by: 'starting_time', starting_time_after: 'yesterday' }).then(function (result) {
             vm.$set('events', result.data);
         })
     },
