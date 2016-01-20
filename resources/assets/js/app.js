@@ -16,6 +16,8 @@ Vue.filter('dateformat', function (datestr, format) {
     return moment(datestr).format(format);
 });
 
+window.Vue = Vue;
+
 var api = {
     events : Vue.resource('/api/v1/event'),
     locations : Vue.resource('/api/v1/location')
@@ -29,13 +31,15 @@ var vm = new Vue({
     },
 
     ready: function () {
-        api.events.query({ order_by: 'starting_time', starting_time_after: 'yesterday' }).then(function (result) {
+        api.events.query({
+            order_by: 'starting_time',
+            starting_time_after: 'yesterday'
+        }).then(function (result) {
             vm.$set('events', result.data);
-        })
+        });
     },
 
     components: {
-        Filter: require('./components/filter.vue'),
         EventList: require('./components/events/list.vue'),
         Month: require('./components/calendar/month.vue'),
         Map: require('./components/map.vue')

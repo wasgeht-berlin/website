@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>was geht</title>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/lib.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}" />
 </head>
 <body>
 <div class="container-fluid">

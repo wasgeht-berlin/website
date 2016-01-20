@@ -19,5 +19,13 @@ elixir(function(mix) {
     mix.sass('app.scss');
     mix.browserify('app.js');
 
+    mix.styles(
+        [
+            'leaflet/dist/leaflet.css'
+        ],
+        'public/css/lib.css',
+        'node_modules'
+    );
+
     mix.copy('node_modules/bootstrap-sass/assets/fonts', 'public/fonts');
 });
