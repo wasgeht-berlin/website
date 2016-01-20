@@ -5,9 +5,11 @@ namespace App\Jobs;
 use App\Exceptions\InvalidEventException;
 use App\Model\Event;
 use App\Model\Location;
+use App\Model\Tag;
 use Carbon\Carbon;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Parser;
 
@@ -220,7 +222,22 @@ class RunScraper extends Job implements SelfHandling
         $event->location()->associate($loc);
 
         if (isset($info['tags'])) {
-            // TODO: add tags
+            foreach ($info['tags'] as $tagName) {
+                try {
+                    $tag = Tag::whereName($tagName)->firstOrFail();
+
+                    $event->tags()->save($tag);
+                } catch (ModelNotFoundException $e) {
+                    $this->raiseIssue(
+                        "[$this->name]: Unknown tag name '{$tagName}'",
+                        "The tag '{$tagName}' is not registered.\n\n"
+                        ."Full entity info was:\n\n"
+                        .var_export($info, true)
+                    );
+                    
+                    continue;
+                }
+            }
         }
 
         $event->save();
