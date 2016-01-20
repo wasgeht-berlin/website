@@ -7,7 +7,9 @@
             <div v-if="events && events.data">
                 <table class="table table-condensed table-striped">
                     <tr v-for="event in events.data">
-                        <td>{{ event.title }}</td>
+                        <td>
+                            <a :href.once="event.url">{{ event.title }}</a>
+                        </td>
                         <td>
                         <span v-if="event.location">
                             {{ event.location.human_name }}
