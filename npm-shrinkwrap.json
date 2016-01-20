@@ -6578,9 +6578,9 @@
       "resolved": "https://registry.npmjs.org/vm-browserify/-/vm-browserify-0.0.4.tgz"
     },
     "vue": {
-      "version": "1.0.10",
-      "from": "vue@*",
-      "resolved": "https://registry.npmjs.org/vue/-/vue-1.0.10.tgz"
+      "version": "1.0.15",
+      "from": "vue@>=1.0.10 <2.0.0",
+      "resolved": "https://registry.npmjs.org/vue/-/vue-1.0.15.tgz"
     },
     "vue-hot-reload-api": {
       "version": "1.2.2",
