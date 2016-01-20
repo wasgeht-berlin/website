@@ -5,6 +5,8 @@
 </template>
 
 <script>
+    import api from '../api.js'
+
     export default {
         data() {
             return {
@@ -24,11 +26,11 @@
                 this.$http.post('/api/v1/event/search', {
                     query: this.query
                 }).then(function (result) {
-                    if (result.ok) {
-                        // data is in result.data
-                    }
-                }, function (result) {
-                    // TODO: handle failed request
+                    vm.$set('events', result.data);
+                }, function () {
+                    api.events.query({}).then(function(result) {
+                        vm.$set('events', result.data)
+                    });
                 });
             }
         }

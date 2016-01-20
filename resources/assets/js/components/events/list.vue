@@ -32,6 +32,8 @@
 </template>
 
 <script>
+    import Filter from '../filter.vue'
+
     export default {
         props: {
             events: {
@@ -40,7 +42,7 @@
         },
 
         components: {
-            Filter: require('../filter.vue')
+            Filter
         }
     };
 </script>
