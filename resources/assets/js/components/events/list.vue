@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="col-xs-12 col-md-6 col-md-offset-3">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
 
             <filter :events.sync="events"></filter>
 
