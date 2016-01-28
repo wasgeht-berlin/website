@@ -1,11 +1,11 @@
 <template>
-    <nav class="event-list">
+    <nav class="event-list" v-show="pageCount > 1">
         <ul class="pagination pagination-sm">
             <li :class="{ disabled: currentPage <= 1 }">
                 <a v-on:click.prevent="back($event)">{{ labels.front }}</a>
             </li>
 
-            <template v-if="pageCount <= frontElements + windowElements + backElements">
+            <template v-if="pageCount <= frontElements + windowElements + backElements" >
                 <nav-element
                         v-for="page in pageCount"
                         :page="page"
