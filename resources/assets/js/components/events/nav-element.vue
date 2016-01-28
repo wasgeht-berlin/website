@@ -18,7 +18,7 @@
         methods: {
             select(page, event) {
                 if (event) {
-                    this.$dispatch('navigate-to', page);
+                    this.$dispatch('navigate-to', page + this.offset);
                 }
             }
         }
