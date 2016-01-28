@@ -4,6 +4,8 @@
 
             <filter :events.sync="events"></filter>
 
+            <list-navigation :events="events"></list-navigation>
+
             <div v-if="events && events.data">
                 <table class="table table-condensed table-striped">
                     <tr v-for="event in events.data">
@@ -29,12 +31,14 @@
             <div v-else>
                 <span class="text-center">Keine Ereignisse gefunden.</span>
             </div>
+            <list-navigation :events="events"></list-navigation>
         </div>
     </div>
 </template>
 
 <script>
     import Filter from '../filter.vue'
+    import ListNavigation from './nav.vue'
 
     export default {
         props: {
@@ -44,7 +48,8 @@
         },
 
         components: {
-            Filter
+            Filter,
+            ListNavigation
         }
     };
 </script>

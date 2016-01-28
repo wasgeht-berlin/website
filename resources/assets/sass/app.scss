@@ -30,6 +30,10 @@ $headings-font-family: 'Special Elite';
   float: left
 }
 
+nav.event-list {
+  text-align: center;
+}
+
 * html .centered-pills ul.nav-pills, * + html .centered-pills ul.nav-pills {
   display: inline
 }

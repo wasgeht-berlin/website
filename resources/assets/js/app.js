@@ -38,6 +38,44 @@ window.vm = new Vue({
         });
     },
 
+    events: {
+        'navigate-back'() {
+            if (this.events.meta.pagination.current_page == 1) return;
+
+            api.events.query({
+                order_by: 'starting_time',
+                starting_time_after: 'yesterday',
+                page: this.events.meta.pagination.current_page - 1
+            }).then(function (result) {
+                vm.$set('events', result.data);
+            });
+        },
+
+        'navigate-to'(page) {
+            if (page > this.events.meta.pagination.total_pages ||  page < 1) return;
+
+            api.events.query({
+                order_by: 'starting_time',
+                starting_time_after: 'yesterday',
+                page: page
+            }).then(function (result) {
+                vm.$set('events', result.data);
+            });
+        },
+
+        'navigate-forward'() {
+            if (this.events.meta.pagination.current_page == this.events.meta.pagination.total_pages) return;
+
+            api.events.query({
+                order_by: 'starting_time',
+                starting_time_after: 'yesterday',
+                page: this.events.meta.pagination.current_page - 1
+            }).then(function (result) {
+                vm.$set('events', result.data);
+            });
+        }
+    },
+
     components: {
         EventList,
         Month,
