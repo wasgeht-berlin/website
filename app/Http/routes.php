@@ -12,8 +12,8 @@
 */
 
 Route::get('/', ['uses' => 'AppController@index', 'as' => 'app.index']);
-Route::get('/calendar', ['uses' => 'AppController@calendar', 'as' => 'app.calendar']);
-Route::get('/map', ['uses' => 'AppController@map', 'as' => 'app.map']);
+//Route::get('/calendar', ['uses' => 'AppController@calendar', 'as' => 'app.calendar']);
+//Route::get('/map', ['uses' => 'AppController@map', 'as' => 'app.map']);
 Route::get('/contribute', ['uses' => 'AppController@contribute', 'as' => 'app.contribute']);
 Route::get('/about', ['uses' => 'AppController@about', 'as' => 'app.about']);
 

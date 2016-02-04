@@ -3,10 +3,10 @@
 use Cocur\Slugify\Slugify;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 abstract class ElasticModel extends Model
 {
-    // init elastic search client
     public static function boot()
     {
         $elasticClient = ClientBuilder::create()->build();
@@ -20,10 +20,29 @@ abstract class ElasticModel extends Model
             ];
 
             $elasticClient->index($params);
+            return true;
+        };
+
+        $deleteIndex = function (ElasticModel $modelInstance) use ($elasticClient) {
+            $reflectionClass = new \ReflectionClass($modelInstance);
+            $traits = $reflectionClass->getTraits();
+            if (in_array(SoftDeletes::class, array_keys($traits)) && $modelInstance->trashed()) {
+                return true;
+            }
+
+            $params = [
+                'index' => config('search.index'),
+                'type' => $modelInstance->getElasticType(),
+                'id' => $modelInstance->getKey(),
+            ];
+
+            $elasticClient->delete($params);
+            return true;
         };
 
         static::created($updateIndex);
         static::updated($updateIndex);
+        static::deleted($deleteIndex);
     }
 
     protected function getElasticType()
@@ -72,9 +91,16 @@ abstract class ElasticModel extends Model
         return collect($result['hits']['hits'])->map(function ($hit) {
             $entity = static::find($hit['_id']);
 
-            $entity->score = $hit['_score'];
+            if ($entity)
+            {
+                $entity->score = $hit['_score'];
 
-            return $entity;
+                return $entity;
+            }
+
+            return null;
+        })->filter(function ($entity) {
+            return !is_null($entity);
         });
     }
 }

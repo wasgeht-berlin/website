@@ -608,6 +608,11 @@
       "from": "boom@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/boom/-/boom-2.10.1.tgz"
     },
+    "bootstrap": {
+      "version": "3.3.6",
+      "from": "bootstrap@>=3.3.5 <4.0.0",
+      "resolved": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.6.tgz"
+    },
     "bootstrap-sass": {
       "version": "3.3.6",
       "from": "bootstrap-sass@>=3.0.0 <4.0.0",
@@ -6591,6 +6596,11 @@
       "version": "0.1.17",
       "from": "vue-resource@*",
       "resolved": "https://registry.npmjs.org/vue-resource/-/vue-resource-0.1.17.tgz"
+    },
+    "vue-strap": {
+      "version": "1.0.7",
+      "from": "vue-strap@latest",
+      "resolved": "https://registry.npmjs.org/vue-strap/-/vue-strap-1.0.7.tgz"
     },
     "vueify": {
       "version": "7.2.0",

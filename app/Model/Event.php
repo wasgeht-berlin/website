@@ -17,7 +17,7 @@ class Event extends ElasticModel
         'url'
     ];
 
-    protected $dates = ['starting_time', 'ending_time'];
+    protected $dates = ['starting_time', 'ending_time', 'deleted_at'];
 
     protected $hidden = ['notes', 'location_id'];
 
