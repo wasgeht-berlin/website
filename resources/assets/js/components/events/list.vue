@@ -12,12 +12,6 @@
                         <td>
                             <a :href.once="event.url">{{ event.title }}</a>
                         </td>
-                        <td>
-                        <span v-if="event.location">
-                            {{ event.location.human_name }}
-                        </span>
-                            <span v-else class="location-unknown">(Keine Ortsangabe)</span>
-                        </td>
                         <td>{{ event.starting_time | dateformat 'LLL' }}</td>
                         <td>
                             <span v-if="event.ending_time">
